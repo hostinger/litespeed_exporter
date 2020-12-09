@@ -26,7 +26,7 @@ litespeed.exclude-extapp    | Exclude EXTAPP metrics altogether
 ## Builds
 
 #### Pre-built binaries
-For already built binaries, check the [releases](github.com/hostinger/litespeed_exporter/releases).
+For already built binaries, check the [releases](https://www.github.com/hostinger/litespeed_exporter/releases).
 
 #### Building locally
 ```sh
