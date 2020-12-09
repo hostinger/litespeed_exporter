@@ -1,0 +1,26 @@
+# HELP litespeed_bps_in BPS_IN metric.
+# TYPE litespeed_bps_in gauge
+litespeed_bps_in{core="../testdata/.rtreport"} 5
+# HELP litespeed_exporter_scrape_failures_total Number of errors while scraping files.
+# TYPE litespeed_exporter_scrape_failures_total counter
+litespeed_exporter_scrape_failures_total 0
+# HELP litespeed_exporter_scrapes_total Current total LiteSpeed scrapes.
+# TYPE litespeed_exporter_scrapes_total counter
+litespeed_exporter_scrapes_total 1
+# HELP litespeed_extapp_req_per_sec EXTAPP_REQ_PER_SEC metric.
+# TYPE litespeed_extapp_req_per_sec gauge
+litespeed_extapp_req_per_sec{core="../testdata/.rtreport",handler="ABCDEFGH_php72:",hostname="",service="LSAPI"} 0.1
+litespeed_extapp_req_per_sec{core="../testdata/.rtreport",handler="lsphp.10000",hostname="localhost",service="LSAPI"} 0
+litespeed_extapp_req_per_sec{core="../testdata/.rtreport",handler="lsphp72",hostname="",service="LSAPI"} 0
+# HELP litespeed_req_rate_tot_reqs REQ_RATE_TOT_REQS metric.
+# TYPE litespeed_req_rate_tot_reqs gauge
+litespeed_req_rate_tot_reqs{core="../testdata/.rtreport",hostname=""} 2
+litespeed_req_rate_tot_reqs{core="../testdata/.rtreport",hostname="localhost"} 1
+litespeed_req_rate_tot_reqs{core="../testdata/.rtreport",hostname="test.com"} 98670
+litespeed_req_rate_tot_reqs{core="../testdata/.rtreport",hostname="www.test2.com"} 7134
+# HELP litespeed_up Was the last scrape of LiteSpeed successful.
+# TYPE litespeed_up gauge
+litespeed_up 1
+# HELP litespeed_version A metric with a constant '1' value labeled by the LiteSpeed version.
+# TYPE litespeed_version gauge
+litespeed_version{version="LiteSpeed Web Server/Open/1.6.18"} 1

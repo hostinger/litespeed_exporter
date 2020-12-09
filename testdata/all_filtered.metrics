@@ -1,0 +1,12 @@
+# HELP litespeed_exporter_scrape_failures_total Number of errors while scraping files.
+# TYPE litespeed_exporter_scrape_failures_total counter
+litespeed_exporter_scrape_failures_total 0
+# HELP litespeed_exporter_scrapes_total Current total LiteSpeed scrapes.
+# TYPE litespeed_exporter_scrapes_total counter
+litespeed_exporter_scrapes_total 1
+# HELP litespeed_up Was the last scrape of LiteSpeed successful.
+# TYPE litespeed_up gauge
+litespeed_up 1
+# HELP litespeed_version A metric with a constant '1' value labeled by the LiteSpeed version.
+# TYPE litespeed_version gauge
+litespeed_version{version="LiteSpeed Web Server/Open/1.6.18"} 1
