@@ -1,3 +1,4 @@
 litespeed_exporter
 coverage.txt
 bin/
+dist/

@@ -12,6 +12,8 @@ const (
 )
 
 var (
+	// TODO normalize the names & descriptions of each metric
+
 	// LitespeedMetrics includes all available LiteSpeed metrics
 	LitespeedMetrics = metrics{
 		bpsInField:                         newGenericMetric(bpsInField, "BPS_IN metric.", prometheus.GaugeValue),

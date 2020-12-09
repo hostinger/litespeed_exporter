@@ -43,7 +43,7 @@ func main() {
 
 	flag.AddFlags(kingpin.CommandLine, promlogConfig)
 	kingpin.HelpFlag.Short('h')
-	kingpin.Version(fmt.Sprintf("%s %s (%s %s)", exporter, Version, Date, Revision))
+	kingpin.Version(fmt.Sprintf("%s v%s (%s %s)", exporter, Version, Date, Revision))
 	kingpin.Parse()
 
 	excludedMetricFlags := strings.Split(*litespeedExcludedMetrics, ",")
