@@ -1,4 +1,5 @@
 GO          := go
+GOFMT       := gofmt
 GO111MODULE := on
 GOHOSTOS    := $(shell $(GO) env GOHOSTOS)
 GOHOSTARCH  := $(shell $(GO) env GOHOSTARCH)
@@ -22,6 +23,10 @@ test:
 .PHONY: check
 check:
 	$(GO) vet ./...
+	$(GOFMT) -s -d $(shell find . -path ./vendor -prune -o -name '*.go' -print)
+
+.PHONY: format
+format:
 
 .PHONY: clean
 clean:

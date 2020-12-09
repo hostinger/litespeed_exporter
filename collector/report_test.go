@@ -10,9 +10,9 @@ import (
 func TestIndexOfReqRateReturnsExpected(t *testing.T) {
 	lr := litespeedReport{
 		ReqRates: []requestRateReport{
-			requestRateReport{Hostname: ""},
-			requestRateReport{Hostname: "Test 1"},
-			requestRateReport{Hostname: "Test 2"},
+			{Hostname: ""},
+			{Hostname: "Test 1"},
+			{Hostname: "Test 2"},
 		},
 	}
 
@@ -37,9 +37,9 @@ func TestIndexOfReqRateReturnsExpected(t *testing.T) {
 func TestIndexOfExtappReturnsExpected(t *testing.T) {
 	lr := litespeedReport{
 		ExtApps: []externalAppReport{
-			externalAppReport{Service: "Proxy", Hostname: "localhost", Handler: "lsphp.10000"},
-			externalAppReport{Service: "LSAPI", Hostname: "localhost", Handler: "lsphp.10001"},
-			externalAppReport{Service: "LSAPI", Hostname: "test.com", Handler: "lsphp.10002"},
+			{Service: "Proxy", Hostname: "localhost", Handler: "lsphp.10000"},
+			{Service: "LSAPI", Hostname: "localhost", Handler: "lsphp.10001"},
+			{Service: "LSAPI", Hostname: "test.com", Handler: "lsphp.10002"},
 		},
 	}
 
@@ -66,22 +66,22 @@ func TestAddsReportsProperly(t *testing.T) {
 	a := litespeedReport{
 		GeneralInfo: generalInfoReport{Version: "Test version", Uptime: "00:10:10", KeyValues: map[string]float64{bpsInField: 11}},
 		ReqRates: []requestRateReport{
-			requestRateReport{Hostname: "", KeyValues: map[string]float64{reqRateReqPerSecField: 12.34, reqRateTotReqsField: 5}},
+			{Hostname: "", KeyValues: map[string]float64{reqRateReqPerSecField: 12.34, reqRateTotReqsField: 5}},
 		},
 		ExtApps: []externalAppReport{
-			externalAppReport{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{}},
+			{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{}},
 		},
 	}
 
 	b := litespeedReport{
 		GeneralInfo: generalInfoReport{Version: "Test version 2", Uptime: "00:20:20", KeyValues: map[string]float64{bpsInField: 123, bpsOutField: 321}},
 		ReqRates: []requestRateReport{
-			requestRateReport{Hostname: "", KeyValues: map[string]float64{reqRateReqPerSecField: 10, reqRateTotReqsField: 6}},
-			requestRateReport{Hostname: "Test 1", KeyValues: map[string]float64{reqRateTotalPubCacheHitsField: 200}},
+			{Hostname: "", KeyValues: map[string]float64{reqRateReqPerSecField: 10, reqRateTotReqsField: 6}},
+			{Hostname: "Test 1", KeyValues: map[string]float64{reqRateTotalPubCacheHitsField: 200}},
 		},
 		ExtApps: []externalAppReport{
-			externalAppReport{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{extappReqPerSecField: 7.8, extappTotReqsField: 456}},
-			externalAppReport{Service: "LSAPI", Hostname: "localhost", Handler: "lsphp.10001", KeyValues: map[string]float64{extappCmaxconnField: 1000, extappEmaxconnField: 1678}},
+			{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{extappReqPerSecField: 7.8, extappTotReqsField: 456}},
+			{Service: "LSAPI", Hostname: "localhost", Handler: "lsphp.10001", KeyValues: map[string]float64{extappCmaxconnField: 1000, extappEmaxconnField: 1678}},
 		},
 	}
 
@@ -111,32 +111,32 @@ func TestSumsMultipleReportsProperly(t *testing.T) {
 	a := litespeedReport{
 		GeneralInfo: generalInfoReport{Version: "Test version", Uptime: "00:10:10", KeyValues: map[string]float64{bpsInField: 11}},
 		ReqRates: []requestRateReport{
-			requestRateReport{Hostname: "", KeyValues: map[string]float64{reqRateReqPerSecField: 12.34, reqRateTotReqsField: 5}},
+			{Hostname: "", KeyValues: map[string]float64{reqRateReqPerSecField: 12.34, reqRateTotReqsField: 5}},
 		},
 		ExtApps: []externalAppReport{
-			externalAppReport{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{}},
+			{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{}},
 		},
 	}
 
 	b := litespeedReport{
 		GeneralInfo: generalInfoReport{Version: "Test version 2", Uptime: "00:20:20", KeyValues: map[string]float64{bpsInField: 123, bpsOutField: 321}},
 		ReqRates: []requestRateReport{
-			requestRateReport{Hostname: "", KeyValues: map[string]float64{reqRateReqPerSecField: 10, reqRateTotReqsField: 6}},
-			requestRateReport{Hostname: "Test 1", KeyValues: map[string]float64{reqRateTotalPubCacheHitsField: 200}},
+			{Hostname: "", KeyValues: map[string]float64{reqRateReqPerSecField: 10, reqRateTotReqsField: 6}},
+			{Hostname: "Test 1", KeyValues: map[string]float64{reqRateTotalPubCacheHitsField: 200}},
 		},
 		ExtApps: []externalAppReport{
-			externalAppReport{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{extappReqPerSecField: 7.8, extappTotReqsField: 456}},
-			externalAppReport{Service: "LSAPI", Hostname: "localhost", Handler: "lsphp.10001", KeyValues: map[string]float64{extappCmaxconnField: 1000, extappEmaxconnField: 1678}},
+			{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{extappReqPerSecField: 7.8, extappTotReqsField: 456}},
+			{Service: "LSAPI", Hostname: "localhost", Handler: "lsphp.10001", KeyValues: map[string]float64{extappCmaxconnField: 1000, extappEmaxconnField: 1678}},
 		},
 	}
 
 	c := litespeedReport{
 		GeneralInfo: generalInfoReport{Version: "Test version 3", Uptime: "00:30:30", KeyValues: map[string]float64{bpsInField: 6, bpsOutField: 9}},
 		ReqRates: []requestRateReport{
-			requestRateReport{Hostname: "Test 1", KeyValues: map[string]float64{reqRateTotalPubCacheHitsField: 100}},
+			{Hostname: "Test 1", KeyValues: map[string]float64{reqRateTotalPubCacheHitsField: 100}},
 		},
 		ExtApps: []externalAppReport{
-			externalAppReport{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{extappReqPerSecField: 0.2, extappTotReqsField: 4}},
+			{Service: "Proxy", Hostname: "", Handler: "lsphp.10000", KeyValues: map[string]float64{extappReqPerSecField: 0.2, extappTotReqsField: 4}},
 		},
 	}
 

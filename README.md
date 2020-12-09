@@ -1,4 +1,5 @@
 # LiteSpeed exporter for Prometheus
+[![Go Report Card](https://goreportcard.com/badge/github.com/hostinger/litespeed_exporter)](https://goreportcard.com/report/github.com/hostinger/litespeed_exporter)
 
 This is a LiteSpeed exporter for Prometheus that runs on the same machine as
 the target LiteSpeed server and exports its metrics from the automatically-generated `.rtreport` files.

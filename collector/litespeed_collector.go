@@ -167,87 +167,89 @@ func (c *LitespeedCollector) scrapeFile(fileName string) (report *litespeedRepor
 		line = strings.TrimRight(line, "\n")
 
 		identifier := idRegex.FindString(line)
-		if identifier != "" {
-			switch identifier {
-			case versionField:
-				_, v := parseKeyValPair(line, ": ")
-				report.GeneralInfo.Version = v
-			case uptimeField:
-				_, v := parseKeyValPair(line, ": ")
-				report.GeneralInfo.Uptime = v
-			case bpsInField, maxconnField:
-				m := parseKeyValLineToMap(line)
-				for k, v := range m {
-					if !c.metricIsTracked(k) {
-						continue
-					}
+		if identifier == "" {
+			continue
+		}
 
-					vf, err := parseMetricValue(k, v)
-					if err != nil {
-						level.Error(c.logger).Log("msg", "Can't parse field value", "value", v, "err", err)
-						c.scrapeFailures.Inc()
-					} else {
-						report.GeneralInfo.KeyValues[k] = vf
-					}
-				}
-			case reqRateField:
-				parts := strings.SplitN(line, ": ", 2)
-				matches := ibRegex.FindStringSubmatch(line)
-
-				if !c.options.ReqRatesByHost && matches[1] != "" {
+		switch identifier {
+		case versionField:
+			_, v := parseKeyValPair(line, ": ")
+			report.GeneralInfo.Version = v
+		case uptimeField:
+			_, v := parseKeyValPair(line, ": ")
+			report.GeneralInfo.Uptime = v
+		case bpsInField, maxconnField:
+			m := parseKeyValLineToMap(line)
+			for k, v := range m {
+				if !c.metricIsTracked(k) {
 					continue
 				}
 
-				m := parseKeyValLineToMap(parts[1])
-				rr := requestRateReport{
-					Hostname:  matches[1],
-					KeyValues: make(map[string]float64),
+				vf, err := parseMetricValue(k, v)
+				if err != nil {
+					level.Error(c.logger).Log("msg", "Can't parse field value", "value", v, "err", err)
+					c.scrapeFailures.Inc()
+				} else {
+					report.GeneralInfo.KeyValues[k] = vf
 				}
-				for k, v := range m {
-					prefixedFlag := reqRateField + "_" + k
-					if !c.metricIsTracked(prefixedFlag) {
-						continue
-					}
-
-					vf, err := parseMetricValue(prefixedFlag, v)
-					if err != nil {
-						level.Error(c.logger).Log("msg", "Can't parse field value", "value", v, "err", err)
-						c.scrapeFailures.Inc()
-					} else {
-						rr.KeyValues[prefixedFlag] = vf
-					}
-				}
-				report.ReqRates = append(report.ReqRates, rr)
-			case extappField:
-				if c.options.ExcludeExtapp {
-					break
-				}
-
-				parts := strings.SplitN(line, ": ", 2)
-				m := parseKeyValLineToMap(parts[1])
-				matches := ibRegex.FindAllStringSubmatch(line, -1)
-				er := externalAppReport{
-					Service:   matches[0][1],
-					Hostname:  matches[1][1],
-					Handler:   matches[2][1],
-					KeyValues: make(map[string]float64),
-				}
-				for k, v := range m {
-					prefixedFlag := extappField + "_" + k
-					if !c.metricIsTracked(prefixedFlag) {
-						continue
-					}
-
-					vf, err := parseMetricValue(prefixedFlag, v)
-					if err != nil {
-						level.Error(c.logger).Log("msg", "Can't parse field value", "value", v, "err", err)
-						c.scrapeFailures.Inc()
-					} else {
-						er.KeyValues[prefixedFlag] = vf
-					}
-				}
-				report.ExtApps = append(report.ExtApps, er)
 			}
+		case reqRateField:
+			parts := strings.SplitN(line, ": ", 2)
+			matches := ibRegex.FindStringSubmatch(line)
+
+			if !c.options.ReqRatesByHost && matches[1] != "" {
+				continue
+			}
+
+			m := parseKeyValLineToMap(parts[1])
+			rr := requestRateReport{
+				Hostname:  matches[1],
+				KeyValues: make(map[string]float64),
+			}
+			for k, v := range m {
+				prefixedFlag := reqRateField + "_" + k
+				if !c.metricIsTracked(prefixedFlag) {
+					continue
+				}
+
+				vf, err := parseMetricValue(prefixedFlag, v)
+				if err != nil {
+					level.Error(c.logger).Log("msg", "Can't parse field value", "value", v, "err", err)
+					c.scrapeFailures.Inc()
+				} else {
+					rr.KeyValues[prefixedFlag] = vf
+				}
+			}
+			report.ReqRates = append(report.ReqRates, rr)
+		case extappField:
+			if c.options.ExcludeExtapp {
+				break
+			}
+
+			parts := strings.SplitN(line, ": ", 2)
+			m := parseKeyValLineToMap(parts[1])
+			matches := ibRegex.FindAllStringSubmatch(line, -1)
+			er := externalAppReport{
+				Service:   matches[0][1],
+				Hostname:  matches[1][1],
+				Handler:   matches[2][1],
+				KeyValues: make(map[string]float64),
+			}
+			for k, v := range m {
+				prefixedFlag := extappField + "_" + k
+				if !c.metricIsTracked(prefixedFlag) {
+					continue
+				}
+
+				vf, err := parseMetricValue(prefixedFlag, v)
+				if err != nil {
+					level.Error(c.logger).Log("msg", "Can't parse field value", "value", v, "err", err)
+					c.scrapeFailures.Inc()
+				} else {
+					er.KeyValues[prefixedFlag] = vf
+				}
+			}
+			report.ExtApps = append(report.ExtApps, er)
 		}
 	}
 
