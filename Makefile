@@ -25,9 +25,6 @@ check:
 	$(GO) vet ./...
 	$(GOFMT) -s -d $(shell find . -path ./vendor -prune -o -name '*.go' -print)
 
-.PHONY: format
-format:
-
 .PHONY: clean
 clean:
 	rm -rf bin/*

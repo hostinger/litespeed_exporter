@@ -1,6 +1,8 @@
 package collector
 
 import (
+	"fmt"
+	"io/ioutil"
 	"os"
 	"path"
 	"testing"
@@ -218,4 +220,41 @@ func TestCollectSkipsExtappMetrics(t *testing.T) {
 	)
 
 	assertMetricsEqual(t, c, "extapp_excluded.metrics")
+}
+
+func TestGetUpStatusHandlesMissingPIDFile(t *testing.T) {
+	pidFile := "/tmp/TestGetUpStatusHandlesMissingPIDFile"
+
+	res := getUpStatus(pidFile)
+	assert.Equal(t, 0.0, res)
+}
+
+func TestGetUpStatusHandlesInvalidPIDFile(t *testing.T) {
+	f, _ := ioutil.TempFile("", "TestGetUpStatusHandlesInvalidPIDFile")
+	defer os.Remove(f.Name())
+
+	f.Write([]byte("test"))
+
+	res := getUpStatus(f.Name())
+	assert.Equal(t, 0.0, res)
+}
+
+func TestGetUpStatusHandlesInvalidPID(t *testing.T) {
+	f, _ := ioutil.TempFile("", "TestGetUpStatusHandlesInvalidPID")
+	defer os.Remove(f.Name())
+
+	f.Write([]byte("-1"))
+
+	res := getUpStatus(f.Name())
+	assert.Equal(t, 0.0, res)
+}
+
+func TestGetUpStatusHandlesValidPID(t *testing.T) {
+	f, _ := ioutil.TempFile("", "TestGetUpStatusHandlesValidPID")
+	defer os.Remove(f.Name())
+
+	f.Write([]byte(fmt.Sprint(os.Getpid())))
+
+	res := getUpStatus(f.Name())
+	assert.Equal(t, 1.0, res)
 }
