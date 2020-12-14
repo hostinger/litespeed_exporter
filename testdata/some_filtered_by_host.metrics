@@ -20,7 +20,7 @@ litespeed_req_rate_tot_reqs{core="../testdata/.rtreport",hostname="test.com"} 98
 litespeed_req_rate_tot_reqs{core="../testdata/.rtreport",hostname="www.test2.com"} 7134
 # HELP litespeed_up Was the last scrape of LiteSpeed successful.
 # TYPE litespeed_up gauge
-litespeed_up 1
+litespeed_up 0
 # HELP litespeed_version A metric with a constant '1' value labeled by the LiteSpeed version.
 # TYPE litespeed_version gauge
 litespeed_version{version="LiteSpeed Web Server/Open/1.6.18"} 1

@@ -2,13 +2,17 @@ package collector
 
 import (
 	"bufio"
+	"bytes"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"sync"
+	"syscall"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
@@ -73,20 +77,45 @@ func (c *LitespeedCollector) Collect(ch chan<- prometheus.Metric) {
 	c.mutex.Lock()
 	defer c.mutex.Unlock()
 
-	up := c.collectReports(ch)
+	up := getUpStatus("/tmp/lshttpd/lshttpd.pid")
+	c.collectReports(ch)
 
 	ch <- prometheus.MustNewConstMetric(litespeedUp, prometheus.GaugeValue, up)
 	ch <- c.totalScrapes
 	ch <- c.scrapeFailures
 }
 
-func (c *LitespeedCollector) collectReports(ch chan<- prometheus.Metric) (up float64) {
+func getUpStatus(pidFile string) float64 {
+	data, err := ioutil.ReadFile(pidFile)
+	if err != nil {
+		return 0
+	}
+
+	pid, err := strconv.Atoi(string(bytes.TrimSpace(data)))
+	if err != nil {
+		return 0
+	}
+
+	process, err := os.FindProcess(pid)
+	if err != nil {
+		return 0
+	}
+
+	err = process.Signal(syscall.Signal(0))
+	if err != nil && err != syscall.EPERM {
+		return 0
+	}
+
+	return 1
+}
+
+func (c *LitespeedCollector) collectReports(ch chan<- prometheus.Metric) error {
 	c.totalScrapes.Inc()
 
 	reports, err := c.scrapeReports(c.options.FilePattern)
 	if err != nil {
 		c.scrapeFailures.Inc()
-		return 0
+		return err
 	}
 
 	versionScraped := false
@@ -102,7 +131,7 @@ func (c *LitespeedCollector) collectReports(ch chan<- prometheus.Metric) (up flo
 		c.collectExtAppMetrics(core, report.ExtApps, ch)
 	}
 
-	return 1
+	return nil
 }
 
 func (c *LitespeedCollector) collectGeneralInfoMetrics(core string, generalInfo generalInfoReport, ch chan<- prometheus.Metric) {
