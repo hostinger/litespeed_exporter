@@ -65,6 +65,17 @@ func main() {
 	level.Info(logger).Log("address", *listenAddress)
 
 	http.Handle(*metricsPath, promhttp.Handler())
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`
+			<html>
+            <head><title>LiteSpeed Exporter</title></head>
+            <body>
+            <h1>LiteSpeed Exporter</h1>
+            <p><a href='` + *metricsPath + `'>Metrics</a></p>
+            </body>
+			</html>
+		`))
+	})
 
 	if err := http.ListenAndServe(*listenAddress, nil); err != nil {
 		level.Error(logger).Log("msg", "Could not start HTTP server", "err", err)
